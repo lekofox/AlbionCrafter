@@ -26,12 +26,12 @@ if (craftTree == 1)
                 switch (craftChoice)
                 {
                     case 2:
-                        GeneralSwordCrafterService.Craft();
+                        SwordCrafterService.GeneralProfitCraft();
                         craftChoiceError = false;
                         break;
 
                     case 1:
-                        SpecificSwordService.Craft();
+                        SwordCrafterService.SpecificProfitCraft();
                         craftChoiceError = false;
                         break;
 
@@ -41,6 +41,35 @@ if (craftTree == 1)
                         break;
                 }
             }
+            break;
+
+        case 2:
+             craftChoiceError = true;
+            while(craftChoiceError)
+            {
+                Console.WriteLine("Do you want to know the specific profit for a weapon or the most profitable weapon?");
+                Console.WriteLine(" 1 - Specific \n 2 - Most profitable");
+                int craftChoice = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine();
+                switch (craftChoice)
+                {
+                    case 2:
+                        
+                        craftChoiceError = false;
+                        break;
+
+                    case 1:
+                        
+                        craftChoiceError = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Try a valid option");
+                        craftChoiceError = true;
+                        break;
+                }
+            }
+
             break;
 
         default:

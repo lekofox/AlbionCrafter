@@ -3,10 +3,71 @@
 
 namespace AlbionCrafter.Warrior.Swords.SwordService
 {
-    internal class SpecificSwordService
+    internal class SwordCrafterService
     {
 
-        public static void Craft()
+
+        public static void GeneralProfitCraft()
+        {
+            List<IBaseSwords> swordPool = new();
+            string[] typeCounter = new string[] { "Dual", "Kingmaker", "Galatine", "Broadsword", "Clarent", "Claymore", "Carving" };
+            Console.WriteLine("Type the buy price of an empty blacksmith's journal");
+            double journalBuyPrice = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Type the sell price of a full blacksmith's journal");
+            double journalSellPrice = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Type the buy price of the bar");
+            double barBuyPrice = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Type the buy price of the leather");
+            double leatherBuyPrice = Convert.ToDouble(Console.ReadLine());
+            foreach (string s in typeCounter)
+            {
+                Console.WriteLine($"Insert the sell price of {s}");
+                double swordSellPrice = Convert.ToDouble(Console.ReadLine());
+
+                if (s == "Carving" || s == "Kingmaker" || s == "Galatine")
+                {
+                    Console.WriteLine("Type the buy price of the artifact");
+                    double artifactPrice = Convert.ToDouble(Console.ReadLine());
+                    Materials[] materials = new Materials[] { new Materials(leatherBuyPrice, "Leather"), new Materials(barBuyPrice, "Bar"), new Materials(artifactPrice, "Artifact") };
+                    swordPool.Add(new TwoHanded(materials, swordSellPrice, s));
+                }
+                else if (s == "Clarent")
+                {
+                    Console.WriteLine("Type the buy price of the artifact");
+                    double artifactPrice = Convert.ToDouble(Console.ReadLine());
+                    Materials[] materials = new Materials[] { new Materials(leatherBuyPrice, "Leather"), new Materials(barBuyPrice, "Bar"), new Materials(artifactPrice, "Artifact") };
+                    swordPool.Add(new OneHanded(materials, swordSellPrice, s));
+                }
+                else
+                {
+
+                    if (s == "Claymore" || s == "Dual")
+                    {
+                        Materials[] materials = new Materials[] { new Materials(leatherBuyPrice, "Leather"), new Materials(barBuyPrice, "Bar") };
+                        swordPool.Add(new TwoHanded(materials, swordSellPrice, s));
+                    }
+                    else if (s == "Broadsword")
+                    {
+                        Materials[] oneHandedMaterials = new Materials[] { new Materials(leatherBuyPrice, "Leather"), new Materials(barBuyPrice, "Bar") };
+                        swordPool.Add(new OneHanded(oneHandedMaterials, swordSellPrice, s));
+                    }
+
+                }
+
+            };
+            Console.Write("Insert the percentage of the resource return rate: ");
+            double resourceReturn = Convert.ToDouble(Console.ReadLine());
+
+            var orderedSwordPool = swordPool.OrderByDescending(sword => sword.CraftPayback(resourceReturn, 2800, journalBuyPrice, journalSellPrice)).ToList();
+
+            foreach (IBaseSwords swords in swordPool)
+            {
+                Console.WriteLine($" \nYour profit is at least { swords.CraftPayback(resourceReturn, 2800, journalBuyPrice, journalSellPrice).ToString("f2") } silver per craft of {swords.Type}");
+            }
+
+            Console.WriteLine($" \n You should probably craft {orderedSwordPool[0].Type} for profit");
+        }
+        public static void SpecificProfitCraft()
         {
             Console.WriteLine("Type the buy price of an empty blacksmith's journal");
             double journalBuyPrice = Convert.ToDouble(Console.ReadLine());
@@ -42,8 +103,8 @@ namespace AlbionCrafter.Warrior.Swords.SwordService
                             Console.WriteLine("Type the sell price of the Clarent sword");
                             Materials[] materials = new Materials[] { new Materials(leatherBuyPrice, "Leather"), new Materials(barBuyPrice, "Bar"), new Materials(artifactPrice, "Artifact") };
                             double result = new OneHanded(materials, (double)Convert.ToDouble(Console.ReadLine()), "Clarent").CraftPayback(returnRate, 2800, journalBuyPrice, journalSellPrice);
-                            oneHandedSwordTypeError = false;
                             Console.WriteLine($"Your profit per craft is {result:F2}");
+                            oneHandedSwordTypeError = false;
 
                         }
                         else if (oneHandedSwordType == 2)
@@ -102,7 +163,7 @@ namespace AlbionCrafter.Warrior.Swords.SwordService
                     }
                     break;
                 }
-            break;
+                break;
             }
         }
     }
